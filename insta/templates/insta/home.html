@@ -1,0 +1,154 @@
+{% extends "insta/base.html" %}
+{% load static %}
+{% block content %}
+
+<!-- 📰 Featured/Main Section -->
+<section class="featured">
+  <div class="container">
+    <div class="row">
+      {% for post in featured %}
+      <div class="col-12">
+        <article class="featured-post">
+          <div class="featured-post-content">
+            <div class="featured-post-author">
+              <img src="{% static 'insta/images/author.png' %}" alt="author" />
+              <p>By <span>{{ post.author.username }}</span></p>
+            </div>
+
+            <a href="{% url 'postDetails' post.id %}" class="featured-post-title">
+              {{ post.title }}
+            </a>
+
+            <ul class="featured-post-meta">
+              <li>
+                <i class="fa fa-clock-o"></i>
+                {{ post.created_at|date:"F j, Y" }}
+              </li>
+            </ul>
+
+            <p>{{ post.body|truncatewords:45 }}</p>
+          </div>
+
+          <div class="featured-post-thumb">
+            <img src="{{ post.img.url|default:'/media/default.jpg' }}" alt="{{ post.title }}">
+          </div>
+        </article>
+      </div>
+
+      {% empty %}
+      <p>No posts yet!</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+
+<!-- ✍️ Blog Section -->
+<section class="blog">
+  <div class="container">
+
+    <div class="row">
+
+      <div class="col-lg-8">
+
+        <div class="blog-section-title">
+          <h2>Articles</h2>
+          <p>View the latest news on Blogger</p>
+        </div>
+
+        {% for post in page_obj %}
+        <article class="blog-post">
+          <div class="blog-post-thumb">
+            <a href="{% url 'postDetails' post.id %}">
+              <img src="{{ post.img.url|default:'/media/default.jpg' }}" alt="{{ post.title }}">
+            </a>
+          </div>
+
+          <div class="blog-post-content">
+            <h3>{{ post.title }}</h3>
+            <p>{{ post.body|truncatewords:20 }}</p>
+
+            <a href="{% url 'postDetails' post.id %}" class="blog-post-action">
+              read more <i class="fa fa-angle-right"></i>
+            </a>
+          </div>
+        </article>
+        {% endfor %}
+
+
+        <!-- ✅ Pagination -->
+        <div class="pagination mt-4">
+
+          {% if page_obj.has_previous %}
+          <a href="?page=1">First</a>
+          <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+          {% endif %}
+
+          <span>
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+          </span>
+
+          {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}">Next</a>
+          <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+          {% endif %}
+
+        </div>
+
+      </div>
+
+
+      <!-- ⚡ Trending Sidebar -->
+      <div class="col-lg-4">
+        <div class="blog-post-widget">
+
+          <div class="latest-widget-title">
+            <h2>Trending Posts</h2>
+          </div>
+
+          {% for trend in trending %}
+          <div class="latest-widget">
+
+            <div class="latest-widget-thum">
+              <a href="{% url 'postDetails' trend.id %}">
+                <img src="{{ trend.img.url|default:'/media/default.jpg' }}" alt="{{ trend.title }}">
+              </a>
+
+              <div class="icon">
+                <a href="{% url 'postDetails' trend.id %}">
+                  <img src="{% static 'insta/images/blog/icon.svg' %}" alt="icon" />
+                </a>
+              </div>
+            </div>
+
+            <div class="latest-widget-content">
+              <div class="content-title">
+                <a href="{% url 'postDetails' trend.id %}">
+                  {{ trend.title }}
+                </a>
+              </div>
+
+              <div class="content-meta">
+                <ul>
+                  <li>
+                    <i class="fa fa-clock-o"></i>
+                    {{ trend.created_at|date:"F j, Y" }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+
+          {% empty %}
+          <p>No trending posts yet.</p>
+          {% endfor %}
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% endblock content %}

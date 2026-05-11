@@ -1,0 +1,25 @@
+{% extends "insta/base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container mt-5">
+    <h2>Edit Post</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label>Title</label>
+            <input type="text" name="title" value="{{ post.title }}" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label>Content</label>
+            <textarea name="body" class="form-control" rows="5">{{ post.body }}</textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update Post</button>
+    </form>
+</div>
+
+{% endblock %}
