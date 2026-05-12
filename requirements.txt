@@ -1,2 +1,5 @@
+Django==5.2.6
 gunicorn==26.0.0
 packaging==26.2
+whitenoise
+pillow
